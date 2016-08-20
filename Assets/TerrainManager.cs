@@ -12,15 +12,16 @@ public class TerrainManager : MonoBehaviour {
     /// </summary>
     public float roughness;
     /// <summary>
-    /// Maximum height of the terrain.
+    /// Maximum height of the terrain; used only for shading.
     /// </summary>
-    public int maxHeight;
+    public float maxHeight;
     /// <summary>
     /// The shader to use.
     /// </summary>
     public Shader shader;
     /// <summary>
-    /// The scaling factor for the map.
+    /// The scaling factor for the map. Also included are percentages used to decide
+    /// colours.
     /// </summary>
     public float mapScale;
     public float snowHeight;
@@ -29,6 +30,7 @@ public class TerrainManager : MonoBehaviour {
 
     // Size of the map
     private int max;
+    public float Size { get { return max * mapScale; } }
     // Actual map as an array
     private float[,] map;
 
@@ -40,59 +42,74 @@ public class TerrainManager : MonoBehaviour {
         map = new float[size, size];
 
         // Set some initial seed values. Let's start by making each corner halfway up
-        map[0, 0] = maxHeight / 2;
-        map[0, max] = maxHeight / 2;
-        map[max, 0] = maxHeight / 2;
-        map[max, max] = maxHeight / 2;
+        map[0, 0] = 0;//Random.value * maxHeight;
+        map[0, max] = 0; //Random.value * maxHeight;
+        map[max, 0] = 0; //Random.value * maxHeight;
+        map[max, max] = 0; //Random.value * maxHeight;
 
+        // Start the recursion
         Divide(max);
-        gameObject.AddComponent<MeshFilter>().mesh = CreateMesh();
 
+        // Generate the mesh
+        gameObject.AddComponent<MeshFilter>().mesh = CreateMesh();
         Material material = gameObject.AddComponent<MeshRenderer>().material;
         material.shader = shader;
-        material.SetFloat("_maxHeight", maxHeight * 2);
+        material.SetFloat("_maxHeight", maxHeight);
         material.SetFloat("_snowHeight", snowHeight);
         material.SetFloat("_dirtHeight", dirtHeight);
         material.SetFloat("_sandHeight", sandHeight);
     }
 
-    // Returns the value of the array at x and y, or -1 if it's out of bounds
+    // Returns actual height at the given place
+    public float Get(float x, float z) {
+        int xx = (int)((x + Size / 2) / mapScale);
+        int yy = (int)((z + Size / 2) / mapScale);
+        if (xx < 0) xx = 0;
+        if (xx > max) xx = max;
+        if (yy < 0) yy = 0;
+        if (yy > max) yy = max;
+        return map[xx, yy];
+    }
+
+    // Returns the value of the array at x and y, with wrapping
     private float Get(int x, int y) {
-        if (x < 0 || x > max || y < 0 || y > max) {
-            return -1;
-        }
+        // wrap around sides of array to prevent bad access; also gives a nice symmetry
+        if (x < 0) x += max;
+        if (x > max) x -= max;
+        if (y < 0) y += max;
+        if (y > max) y -= max;
         return map[x, y];
     }
 
     // Recursive function to subdivide the map
+    // based on http://www.playfuljs.com/realistic-terrain-in-130-lines/
     private void Divide(int size) {
+        // scale based on size -- early choices matter more than later ones
         float scale = roughness * size;
         // check if we've divided as far as we can
         if (size / 2 < 1) {
             return;
         }
+        // loop over squares
         for (int y = size / 2; y < max; y += size) {
             for (int x = size / 2; x < max; x += size) {
+                // create a square with +/- scale offset
                 Square(x, y, size / 2, Random.value * scale * 2 - scale);
             }
         }
+        // loop over diamonds
         for (int y = 0; y <= max; y += size / 2) {
             for (int x = (y + size / 2) % size; x <= max; x += size) {
+                // create a diamond with the given offset
                 Diamond(x, y, size / 2, Random.value * scale * 2 - scale);
             }
         }
         Divide(size / 2);
     }
 
-    // Returns the average of four values, checking validity
+    // Returns the average of four values
     private float Average(float a, float b, float c, float d) {
-        int count = 0;
-        float sum = 0;
-        if (a != -1) { sum += a; count++; }
-        if (b != -1) { sum += b; count++; }
-        if (c != -1) { sum += c; count++; }
-        if (d != -1) { sum += d; count++; }
-        return sum / count;
+        return (a + b + c + d) * 0.25f;
     }
 
     // Generates a square average at the given point, of the given size, with an offset value
@@ -132,7 +149,7 @@ public class TerrainManager : MonoBehaviour {
 
     // Appends a quad described by the given coordinates to the given list of vertices
     private void AppendQuad(List<Vector3> vertices, int x, int z) {
-        Vector3 offset = new Vector3(-max / 2, 0, -max / 2) * mapScale;
+        Vector3 offset = transform.position;
         // First triangle
         vertices.Add(new Vector3(x, map[x, z] / mapScale, z) * mapScale
                      + offset);                                                           // Bottom left
@@ -148,9 +165,4 @@ public class TerrainManager : MonoBehaviour {
         vertices.Add(new Vector3(x + 1, map[x + 1, z + 1] / mapScale, z + 1) * mapScale
                      + offset);                                                           // Top right
     }
-
-    // Update is called once per frame
-    void Update () {
-	
-	}
 }
