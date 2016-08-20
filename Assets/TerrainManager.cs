@@ -51,7 +51,9 @@ public class TerrainManager : MonoBehaviour {
         Divide(max);
 
         // Generate the mesh
-        gameObject.AddComponent<MeshFilter>().mesh = CreateMesh();
+        Mesh mesh = CreateMesh();
+        mesh.RecalculateNormals();
+        gameObject.AddComponent<MeshFilter>().mesh = mesh;
         Material material = gameObject.AddComponent<MeshRenderer>().material;
         material.shader = shader;
         material.SetFloat("_maxHeight", maxHeight);

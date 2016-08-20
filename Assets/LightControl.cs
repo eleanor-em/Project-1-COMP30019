@@ -6,7 +6,6 @@ public class LightControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        //transform.position = sun.transform.position;
         transform.LookAt(Vector3.zero);
 	}
 }

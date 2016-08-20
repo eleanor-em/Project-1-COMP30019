@@ -51,7 +51,7 @@
 				else {
 					col = float4(0.96863, 0.9451, 0.7451, 1);
 				}
-				col *= 0.5  + 0.5 * v.vertex.y / _maxHeight;
+				col *= 0.75  + 0.25 * v.vertex.y / _maxHeight;
 				o.colour = col;
 				return o;
 			}
