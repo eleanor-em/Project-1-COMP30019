@@ -47,15 +47,19 @@
 				// Colour based on height
 				float4 col;
 				if (v.vertex.y > _maxHeight * _snowHeight) {
+					// white
 					col = float4(1, 1, 1, 1);
 				}
 				else if (v.vertex.y > _maxHeight * _dirtHeight) {
+					// brown
 					col = float4(0.57254, 0.38431, 0.22353, 1);
 				}
 				else if (v.vertex.y > _maxHeight * _sandHeight) {
+					// green
 					col = float4(0.09804, 0.54902, 0.09804, 1);
 				}
 				else {
+					// yellow
 					col = float4(0.96863, 0.9451, 0.7451, 1);
 				}
 				// Lighting
@@ -73,6 +77,12 @@
 
 				col = ambient + diffuse + specular;
 				col.w = 1;
+
+				// water is located at -15
+				if (_camPosition.y < -15) {
+					col *= float4(0.2, 0.4, 1, 1);
+				}
+
 				o.colour = col;
 				return o;
 			}

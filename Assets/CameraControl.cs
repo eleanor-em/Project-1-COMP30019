@@ -6,7 +6,7 @@ public class CameraControl : MonoBehaviour {
     public float angularSpeed;
     public GameObject terrainObject;
 
-    private float gap = 10f;
+    private float gap = 15f;
 
     void Start() {
         // Lock the cursor to allow mouse look
@@ -59,17 +59,17 @@ public class CameraControl : MonoBehaviour {
             newPos.y = h;
         }
         // Keep the camera inside the terrain's bounds
-        if (newPos.x < -terrain.Size / 2 + gap) {
-            newPos.x = -terrain.Size / 2 + gap;
+        if (newPos.x < gap) {
+            newPos.x = gap;
         }
-        if (newPos.z < -terrain.Size / 2 + gap) {
-            newPos.z = -terrain.Size / 2 + gap;
+        if (newPos.z < gap) {
+            newPos.z = gap;
         }
-        if (newPos.x > terrain.Size / 2 - gap) {
-            newPos.x = terrain.Size / 2 - gap;
+        if (newPos.x > terrain.Size - gap) {
+            newPos.x = terrain.Size - gap;
         }
-        if (newPos.z > terrain.Size / 2 - gap) {
-            newPos.z = terrain.Size / 2 - gap;
+        if (newPos.z > terrain.Size - gap) {
+            newPos.z = terrain.Size - gap;
         }
         transform.position = newPos;
     }

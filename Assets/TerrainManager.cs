@@ -85,8 +85,8 @@ public class TerrainManager : MonoBehaviour {
 
     // Returns actual height at the given place
     public float Get(float x, float z) {
-        int xx = (int)((x + Size / 2) / mapScale);
-        int yy = (int)((z + Size / 2) / mapScale);
+        int xx = (int)(x / mapScale);
+        int yy = (int)(z / mapScale);
         if (xx < 0) xx = 0;
         if (xx > max) xx = max;
         if (yy < 0) yy = 0;
@@ -155,10 +155,11 @@ public class TerrainManager : MonoBehaviour {
     // Create the mesh from the map
     private Mesh CreateMesh() {
         List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
         // Iterate over all quads in the map
         for (int i = 0; i < max - 1; ++i) {
             for (int j = 0; j < max - 1; ++j) {
-                AppendQuad(vertices, i, j);
+                AppendQuad(vertices, triangles, i, j);
             }
         }
 
@@ -166,27 +167,31 @@ public class TerrainManager : MonoBehaviour {
         mesh.name = "Terrain";
         mesh.vertices = vertices.ToArray();
         // Linear mapping of triangles
-        mesh.triangles = Enumerable.Range(0, vertices.Count).ToArray();
+        mesh.triangles = triangles.ToArray();
         return mesh;
     }
 
     // Appends a quad described by the given coordinates to the given list of vertices
-    private void AppendQuad(List<Vector3> vertices, int x, int z) {
+    private void AppendQuad(List<Vector3> vertices, List<int> triangles, int x, int z) {
         Vector3 offset = transform.position;
+        int n = vertices.Count;
         // First triangle
         vertices.Add(new Vector3(x, map[x, z] / mapScale, z) * mapScale
                      + offset);                                                           // Bottom left
+        triangles.Add(n);
         vertices.Add(new Vector3(x, map[x, z + 1] / mapScale, z + 1) * mapScale
                      + offset);                                                           // Top left
+        triangles.Add(n + 1);
         vertices.Add(new Vector3(x + 1, map[x + 1, z] / mapScale, z) * mapScale
                      + offset);                                                           // Bottom right
+        triangles.Add(n + 2);
         // Second triangle
-        vertices.Add(new Vector3(x + 1, map[x + 1, z] / mapScale, z) * mapScale
-                     + offset);                                                           // Bottom right
-        vertices.Add(new Vector3(x, map[x, z + 1] / mapScale, z + 1) * mapScale
-                     + offset);                                                           // Top left
         vertices.Add(new Vector3(x + 1, map[x + 1, z + 1] / mapScale, z + 1) * mapScale
                      + offset);                                                           // Top right
+        // Build up the triangle from previous triangles
+        triangles.Add(n + 1);
+        triangles.Add(n + 3);
+        triangles.Add(n + 2);
     }
 
     void Update() {
