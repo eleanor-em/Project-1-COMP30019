@@ -1,12 +1,5 @@
 ﻿Shader "Unlit/BasicShader"
 {
-	Properties
-	{
-		_maxHeight ("Max Height", Float) = 1
-		_snowHeight("Snow Height", Float) = 1
-		_dirtHeight("Dirt Height", Float) = 1
-		_sandHeight("Sand Height", Float) = 1
-	}
 	SubShader
 	{
 		Pass
@@ -17,11 +10,23 @@
 
 			#include "UnityCG.cginc"
 
+			// Colour info
 			uniform float _maxHeight; 
 			uniform float _snowHeight;
 			uniform float _dirtHeight;
 			uniform float _sandHeight;
-			uniform float4 _sunLocation;
+
+			// Lighting info
+			uniform float _Ia;	// Ambient intensity
+			uniform float _Ka;	// Ambient albedo
+			uniform float _Ip;	// Diffuse intensity
+			uniform float _Kd;	// Diffuse albedo
+			uniform float _C;	// Attenuation factor
+			uniform float _n;	// Specularity
+			uniform float _Ks;	// Specular albedo
+
+			uniform float4 _camPosition;
+			uniform float4 _sunPosition;
 
 			struct vertIn
 			{
@@ -53,12 +58,21 @@
 				else {
 					col = float4(0.96863, 0.9451, 0.7451, 1);
 				}
-				// Diffuse lighting
-				float3 L = normalize(_sunLocation.xyz - v.vertex.xyz);
-				col *= max(dot(v.normal.xyz, L), 0);
-				float ambient = 0.1;
-				col += float4(ambient, ambient, ambient, 1);
+				// Lighting
+				float3 L = normalize(_sunPosition - v.vertex.xyz);
+				float3 V = normalize(_camPosition - v.vertex.xyz);
+				float3 H = normalize(L + V);
+				float U = length(V);
 
+				float4 ambient = _Ia * _Ka * col;
+				float4 diffuse = _Kd * col * max(dot(v.normal.xyz, L), 0);
+				float4 specular = _Ks * pow(max(dot(v.normal.xyz, H), 0), _n) * col;
+
+				diffuse *= _Ip / (_C + U);
+				specular *= _Ip / (_C + U);
+
+				col = ambient + diffuse + specular;
+				col.w = 1;
 				o.colour = col;
 				return o;
 			}

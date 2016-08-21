@@ -28,7 +28,22 @@ public class TerrainManager : MonoBehaviour {
     public float dirtHeight;
     public float sandHeight;
 
+    /// <summary>
+    /// Lighting options
+    /// </summary>
+    public float ambientIntensity;
+    public float ambientAlbedo;
+    public float diffuseIntensity;
+    public float diffuseAlbedo;
+    public float attenuationFactor;
+    public float specularity;
+    public float specularAlbedo;
+
+    /// <summary>
+    /// Sun and camera objects for lighting.
+    /// </summary>
     public GameObject sun;
+    public GameObject cam;
 
     // Size of the map
     private int max;
@@ -36,10 +51,11 @@ public class TerrainManager : MonoBehaviour {
     // Actual map as an array
     private float[,] map;
 
+    // Used for dynamic camera and sun movement
     private Material material;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         // Create the map
         int size = (int)Mathf.Pow(2, detail) + 1;
         max = size - 1;
@@ -57,7 +73,9 @@ public class TerrainManager : MonoBehaviour {
         Mesh mesh = CreateMesh();
         mesh.RecalculateNormals();
         gameObject.AddComponent<MeshFilter>().mesh = mesh;
+        // Create the material
         material = gameObject.AddComponent<MeshRenderer>().material;
+        // Set up shader
         material.shader = shader;
         material.SetFloat("_maxHeight", maxHeight);
         material.SetFloat("_snowHeight", snowHeight);
@@ -172,6 +190,14 @@ public class TerrainManager : MonoBehaviour {
     }
 
     void Update() {
-        material.SetVector("_sunLocation", sun.transform.position);
+        material.SetVector("_sunPosition", sun.transform.position);
+        material.SetVector("_camPosition", cam.transform.position);
+        material.SetFloat("_Ia", ambientIntensity);
+        material.SetFloat("_Ka", ambientAlbedo);
+        material.SetFloat("_Ip", diffuseIntensity);
+        material.SetFloat("_Kd", diffuseAlbedo);
+        material.SetFloat("_C", attenuationFactor);
+        material.SetFloat("_n", specularity);
+        material.SetFloat("_Ks", specularAlbedo);
     }
 }
