@@ -190,8 +190,11 @@ public class TerrainManager : MonoBehaviour {
     }
 
     void Update() {
+        // Update shader settings
         material.SetVector("_sunPosition", sun.transform.position);
         material.SetVector("_camPosition", cam.transform.position);
+        // These are included so that the settings can be played with
+        // while the game is running
         material.SetFloat("_Ia", ambientIntensity);
         material.SetFloat("_Ka", ambientAlbedo);
         material.SetFloat("_Ip", diffuseIntensity);
