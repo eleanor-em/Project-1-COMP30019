@@ -11,7 +11,6 @@ public class CameraControl : MonoBehaviour {
     void Start() {
         // Lock the cursor to allow mouse look
         Cursor.lockState = CursorLockMode.Locked;
-        // Grab a reference to the terrain manager
     }
 
 	// Update is called once per frame
@@ -47,16 +46,19 @@ public class CameraControl : MonoBehaviour {
                                                    Vector3.up);
         transform.rotation *= delta;
 
+        // Keep camera inside terrain
         bound();
     }
 
     private void bound() {
         TerrainManager terrain = terrainObject.GetComponent<TerrainManager>();
+        // Keep the camera above the terrain
         float h = terrain.Get(transform.position.x, transform.position.z) + gap;
         Vector3 newPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         if (transform.position.y < h) {
             newPos.y = h;
         }
+        // Keep the camera inside the terrain's bounds
         if (newPos.x < -terrain.Size / 2 + gap) {
             newPos.x = -terrain.Size / 2 + gap;
         }

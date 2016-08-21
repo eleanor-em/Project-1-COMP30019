@@ -17,16 +17,18 @@
 
 			#include "UnityCG.cginc"
 
-			uniform float _maxHeight;
+			uniform float _maxHeight; 
 			uniform float _snowHeight;
 			uniform float _dirtHeight;
 			uniform float _sandHeight;
+			uniform float4 _sunLocation;
 
 			struct vertIn
 			{
 				float4 vertex : POSITION;
+				float3 normal : NORMAL;
 			};
-				struct vertOut
+			struct vertOut
 			{
 				float4 vertex : SV_POSITION;
 				float4 colour : COLOR;
@@ -51,7 +53,12 @@
 				else {
 					col = float4(0.96863, 0.9451, 0.7451, 1);
 				}
-				col *= 0.75  + 0.25 * v.vertex.y / _maxHeight;
+				// Diffuse lighting
+				float3 L = normalize(_sunLocation.xyz - v.vertex.xyz);
+				col *= max(dot(v.normal.xyz, L), 0);
+				float ambient = 0.1;
+				col += float4(ambient, ambient, ambient, 1);
+
 				o.colour = col;
 				return o;
 			}

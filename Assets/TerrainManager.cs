@@ -28,11 +28,15 @@ public class TerrainManager : MonoBehaviour {
     public float dirtHeight;
     public float sandHeight;
 
+    public GameObject sun;
+
     // Size of the map
     private int max;
     public float Size { get { return max * mapScale; } }
     // Actual map as an array
     private float[,] map;
+
+    private Material material;
 
 	// Use this for initialization
 	void Start () {
@@ -49,12 +53,11 @@ public class TerrainManager : MonoBehaviour {
 
         // Start the recursion
         Divide(max);
-
         // Generate the mesh
         Mesh mesh = CreateMesh();
         mesh.RecalculateNormals();
         gameObject.AddComponent<MeshFilter>().mesh = mesh;
-        Material material = gameObject.AddComponent<MeshRenderer>().material;
+        material = gameObject.AddComponent<MeshRenderer>().material;
         material.shader = shader;
         material.SetFloat("_maxHeight", maxHeight);
         material.SetFloat("_snowHeight", snowHeight);
@@ -75,7 +78,7 @@ public class TerrainManager : MonoBehaviour {
 
     // Returns the value of the array at x and y, with wrapping
     private float Get(int x, int y) {
-        // wrap around sides of array to prevent bad access; also gives a nice symmetry
+        // Wrap around sides of array to prevent bad access; also gives a nice symmetry
         if (x < 0) x += max;
         if (x > max) x -= max;
         if (y < 0) y += max;
@@ -166,5 +169,9 @@ public class TerrainManager : MonoBehaviour {
                      + offset);                                                           // Top left
         vertices.Add(new Vector3(x + 1, map[x + 1, z + 1] / mapScale, z + 1) * mapScale
                      + offset);                                                           // Top right
+    }
+
+    void Update() {
+        material.SetVector("_sunLocation", sun.transform.position);
     }
 }
