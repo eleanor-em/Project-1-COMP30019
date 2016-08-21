@@ -156,7 +156,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 290244743}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1536, y: 0, z: 0}
+  m_LocalPosition: {x: 1536, y: 0, z: 230}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -227,7 +227,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_BackGroundColor: {r: 0.20392157, g: 0.4, b: 1, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -279,68 +279,6 @@ MonoBehaviour:
   speed: 80
   angularSpeed: 60
   terrainObject: {fileID: 1669926519}
---- !u!1 &450039802
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 450039804}
-  - 108: {fileID: 450039803}
-  m_Layer: 0
-  m_Name: Directional light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!108 &450039803
-Light:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 450039802}
-  m_Enabled: 1
-  serializedVersion: 6
-  m_Type: 1
-  m_Color: {r: 0.15835857, g: 0.16238827, b: 0.74264705, a: 1}
-  m_Intensity: 0.32
-  m_Range: 10
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
-  m_BounceIntensity: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
-  m_AreaSize: {x: 1, y: 1}
---- !u!4 &450039804
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 450039802}
-  m_LocalRotation: {x: 0.3567566, y: -0.34285018, z: 0.14268763, w: 0.8572157}
-  m_LocalPosition: {x: 267.3, y: 435.3, z: -234.6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 45.1923, y: -43.598698, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
 --- !u!1 &590439030
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +414,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!1 &945971523
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +500,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1214519927}
   - 33: {fileID: 1214519926}
-  - 64: {fileID: 1214519925}
   - 23: {fileID: 1214519924}
   m_Layer: 0
   m_Name: Water (Below face)
@@ -597,18 +534,6 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!64 &1214519925
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1214519923}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &1214519926
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -638,7 +563,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1558164465}
   - 33: {fileID: 1558164464}
-  - 64: {fileID: 1558164463}
   - 23: {fileID: 1558164462}
   m_Layer: 0
   m_Name: Water
@@ -673,18 +597,6 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!64 &1558164463
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1558164461}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &1558164464
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -740,12 +652,12 @@ MonoBehaviour:
   snowHeight: 0.8
   dirtHeight: 0.7
   sandHeight: -0.15
-  ambientIntensity: 0.4
+  ambientIntensity: 0.7
   ambientAlbedo: 0.3
   diffuseIntensity: 0.9
   diffuseAlbedo: 1
-  attenuationFactor: 0.5
-  specularity: 0.1
+  attenuationFactor: 1
+  specularity: 0.8
   specularAlbedo: 0.6
   sun: {fileID: 290244743}
   cam: {fileID: 374914510}
@@ -849,7 +761,7 @@ RectTransform:
   m_Children:
   - {fileID: 945971524}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}

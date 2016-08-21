@@ -37,6 +37,7 @@
 			{
 				float4 vertex : SV_POSITION;
 				float4 colour : COLOR;
+				float2 distance : TEXCOORD0;
 			};
 
 			// Implementation of the vertex shader
@@ -63,10 +64,11 @@
 					col = float4(0.96863, 0.9451, 0.7451, 1);
 				}
 				// Lighting
-				float3 L = normalize(_sunPosition - v.vertex.xyz);
-				float3 V = normalize(_camPosition - v.vertex.xyz);
-				float3 H = normalize(L + V);
-				float U = length(V);
+				float3 L = _sunPosition - v.vertex.xyz;
+				float3 V = _camPosition - v.vertex.xyz;
+				float3 H = L + V;
+				float U = length(L);
+				o.distance = float2(length(V), 0);
 
 				float4 ambient = _Ia * _Ka * col;
 				float4 diffuse = _Kd * col * max(dot(v.normal.xyz, L), 0);
@@ -78,11 +80,6 @@
 				col = ambient + diffuse + specular;
 				col.w = 1;
 
-				// water is located at -15
-				if (_camPosition.y < -15) {
-					col *= float4(0.2, 0.4, 1, 1);
-				}
-
 				o.colour = col;
 				return o;
 			}
@@ -90,7 +87,18 @@
 			// Implementation of the fragment shader
 			fixed4 frag(vertOut v) : SV_Target
 			{
-				return v.colour;
+				float4 col = v.colour;
+				float4 fogCol = float4(0.2, 0.4, 1, 1);
+				float fogDensity = 0.03;
+				// water is located at -15
+				if (_camPosition.y < -15) {
+					//return float4(1 / (v.distance.x * 5), 0, 0, 1);
+					//col *= fogCol;
+					// calculate fog
+					float fogFactor = clamp(1.0 / exp(v.distance.x * fogDensity), 0, 1);
+					col = lerp(fogCol, col, fogFactor);
+				}
+				return col;
 			}
 			ENDCG
 		}
