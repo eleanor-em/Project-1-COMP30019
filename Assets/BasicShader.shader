@@ -72,7 +72,8 @@
 
 				float4 ambient = _Ia * _Ka * col;
 				float4 diffuse = _Kd * col * max(dot(v.normal.xyz, L), 0);
-				float4 specular = _Ks * pow(max(dot(v.normal.xyz, H), 0), _n) * col;
+				// Multiply specularity by white so that we calculate the whole vector at once
+				float4 specular = _Ks * pow(max(dot(v.normal.xyz, H), 0), _n) * float4(1, 1, 1, 1);
 
 				diffuse *= _Ip / (_C + U);
 				specular *= _Ip / (_C + U);

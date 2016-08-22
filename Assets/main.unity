@@ -655,8 +655,8 @@ MonoBehaviour:
   ambientIntensity: 0.7
   ambientAlbedo: 0.3
   diffuseIntensity: 0.9
-  diffuseAlbedo: 1
-  attenuationFactor: 1
+  diffuseAlbedo: 0.8
+  attenuationFactor: 50
   specularity: 0.8
   specularAlbedo: 0.6
   sun: {fileID: 290244743}
