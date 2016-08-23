@@ -93,8 +93,6 @@
 				float fogDensity = 0.03;
 				// water is located at -15
 				if (_camPosition.y < -15) {
-					//return float4(1 / (v.distance.x * 5), 0, 0, 1);
-					//col *= fogCol;
 					// calculate fog
 					float fogFactor = clamp(1.0 / exp(v.distance.x * fogDensity), 0, 1);
 					col = lerp(fogCol, col, fogFactor);
